@@ -1,16 +1,24 @@
-import { GoogleGenAI } from "@google/generative-ai";
+import * as GoogleGenerativeAI from "@google/generative-ai";
 
-// ملاحظة: تأكد من وضع مفتاح API الحقيقي الخاص بك هنا
-const getAI = () => new GoogleGenAI("YOUR_GEMINI_API_KEY_HERE");
+// استخراج الكلاس بشكل آمن لتجنب أخطاء TypeScript
+const { GoogleGenAI } = GoogleGenerativeAI;
+
+// تأكد من وضع مفتاح API الخاص بك هنا
+const apiKey = "YOUR_GEMINI_API_KEY_HERE";
+
+const getAI = () => new GoogleGenAI(apiKey);
 
 export const getSmartResponse = async (userMessage: string, role: string) => {
+  if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY_HERE") {
+    return "يرجى إعداد مفتاح API الخاص بـ Gemini أولاً.";
+  }
+
   const genAI = getAI();
   const systemInstruction = role === 'DOCTOR' 
     ? "أنت مساعد طبي ذكي يساعد الطبيب في تلخيص أعراض المريض أو اقتراح بروتوكولات المتابعة. كن موجزاً ومهنياً."
     : "أنت مساعد طبي ذكي يساعد المريض في فهم حالته بشكل مبسط وتوجيهه لأفضل الطرق للتواصل مع طبيبه. لا تعطي تشخيصات نهائية ولكن قدم نصائح عامة.";
 
   try {
-    // استخدام موديل مستقر ومدعوم
     const model = genAI.getGenerativeModel({ 
       model: "gemini-1.5-flash",
       systemInstruction: systemInstruction 
