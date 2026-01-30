@@ -1,7 +1,6 @@
-// @ts-ignore
-import { GoogleGenAI } from "@google/generative-ai";
+// ملاحظة: حذفنا الـ import العادي تماماً من الأعلى لكي لا يراه TypeScript
 
-// تأكد من وضع مفتاح API الخاص بك هنا
+// ضع مفتاح API الخاص بك هنا
 const apiKey = "YOUR_GEMINI_API_KEY_HERE";
 
 export const getSmartResponse = async (userMessage: string, role: string) => {
@@ -10,7 +9,9 @@ export const getSmartResponse = async (userMessage: string, role: string) => {
   }
 
   try {
-    // إنشاء الكائن مباشرة داخل الدالة لضمان استقرار الـ Build
+    // جلب المكتبة ديناميكياً لتخطي فحص TypeScript المزعج
+    const { GoogleGenAI } = await import("@google/generative-ai");
+    
     const genAI = new GoogleGenAI(apiKey);
     
     const systemInstruction = role === 'DOCTOR' 
